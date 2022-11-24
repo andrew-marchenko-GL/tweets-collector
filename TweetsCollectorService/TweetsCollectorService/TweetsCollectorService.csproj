@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Description>This service collects tweets from the Twitter Development API and provides with statistic.</Description>
+		<Authors>Andrii Marchenko</Authors>
+		<Company>GlobalLogic (Hitachi Group)</Company>
+		<RootNamespace>Jha.Services.TweetsCollectorService</RootNamespace>
+		<Version>0.0.1</Version>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+	</ItemGroup>
+</Project>
