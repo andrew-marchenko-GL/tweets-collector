@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AnalysisMode>All</AnalysisMode>
+		<Description>This service collects tweets from the Twitter Development API and provides with statistic.</Description>
+		<Authors>Andrii Marchenko</Authors>
+		<Company>GlobalLogic (Hitachi Group)</Company>
+		<RootNamespace>Jha.Services.TweetsCollectorService</RootNamespace>
+		<Version>0.0.1</Version>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(RunConfiguration)' == 'TweetsCollectorService' " />
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<WarningLevel>4</WarningLevel>
+		<DocumentationFile>bin\Debug\net6.0\TweetsCollectorService.xml</DocumentationFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Remove="Services\" />
+	  <None Remove="Services\Twitter\" />
+	  <None Remove="Models\" />
+	  <None Remove="Models\Configuration\" />
+	  <None Remove="Models\Twitter\" />
+	  <None Remove="Utils\" />
+	  <None Remove="Utils\Authentication\" />
+	  <None Remove="Utils\Authentication\OAuth\" />
+	  <None Remove="Utils\Authentication\OAuth\1.0\" />
+	  <None Remove="Services\Storage\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Services\" />
+	  <Folder Include="Services\Twitter\" />
+	  <Folder Include="Models\" />
+	  <Folder Include="Models\Configuration\" />
+	  <Folder Include="Models\Twitter\" />
+	  <Folder Include="Utils\" />
+	  <Folder Include="Utils\Authentication\" />
+	  <Folder Include="Utils\Authentication\OAuth\" />
+	  <Folder Include="Utils\Authentication\OAuth\1.0\" />
+	  <Folder Include="Services\Storage\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Include="..\.editorconfig" />
+	</ItemGroup>
+</Project>
