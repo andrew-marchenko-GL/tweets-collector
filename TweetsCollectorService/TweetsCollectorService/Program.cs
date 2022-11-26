@@ -1,13 +1,18 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Jha.Services.TweetsCollectorService.Startup.ServiceCollectionExtensions;
+
+var builder = WebApplication.CreateBuilder(args);
+
+#region Configure services
 
 // Add services to the container.
+builder.Services.AddControllerServices();
+builder.Services.AddTwitterServices(builder.Configuration);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+#endregion
 
 var app = builder.Build();
+
+#region Configure application
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -22,5 +27,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+#endregion
 
+app.Run();
