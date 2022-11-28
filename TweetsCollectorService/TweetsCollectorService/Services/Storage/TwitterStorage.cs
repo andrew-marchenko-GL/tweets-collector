@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Globalization;
-using System.Linq.Expressions;
 using Jha.Services.TweetsCollectorService.Models.Twitter;
 
 /// <summary>
@@ -91,7 +90,7 @@ public class TwitterStorage : IStorage<Tweet>
         {
             if (!this.storage.Remove(tweet.Id, out _))
             {
-                this.logger.LogWarning("Unable to remove tweet {Id}.", tweet);
+                this.logger.LogWarning("Unable to remove tweet {Tweet}.", tweet);
             }
 
             return tweet;

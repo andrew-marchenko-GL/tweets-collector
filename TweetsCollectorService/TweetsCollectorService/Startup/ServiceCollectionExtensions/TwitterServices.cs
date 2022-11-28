@@ -1,12 +1,9 @@
 ﻿namespace Jha.Services.TweetsCollectorService.Startup.ServiceCollectionExtensions;
 
-using System;
 using Jha.Services.TweetsCollectorService.Models.Configuration;
 using Jha.Services.TweetsCollectorService.Models.Twitter;
 using Jha.Services.TweetsCollectorService.Services.Storage;
 using Jha.Services.TweetsCollectorService.Services.Twitter;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 
 /// <summary>

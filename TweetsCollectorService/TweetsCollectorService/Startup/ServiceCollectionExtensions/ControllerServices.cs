@@ -1,6 +1,5 @@
 ﻿namespace Jha.Services.TweetsCollectorService.Startup.ServiceCollectionExtensions;
 
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 
