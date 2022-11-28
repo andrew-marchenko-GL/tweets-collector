@@ -1,5 +1,6 @@
 ﻿namespace Jha.Services.TweetsCollectorService.Startup.ServiceCollectionExtensions;
 
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 
@@ -29,9 +30,14 @@ public static class ControllerServices
             });
         services.AddControllers();
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(
+            options =>
+            {
+                string xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                string xmlCommentsFullPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), xmlCommentsFile);
+                options.IncludeXmlComments(xmlCommentsFullPath);
+            });
 
         return services;
     }
 }
-
