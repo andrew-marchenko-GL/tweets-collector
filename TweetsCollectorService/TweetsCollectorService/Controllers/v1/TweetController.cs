@@ -38,7 +38,7 @@ public class TweetController : ControllerBase
     #endregion
 
     /// <summary>
-    /// GetTweetById
+    /// GetTweet
     /// </summary>
     /// <remarks>
     /// Gets a tweet by the identifier from the storage.
@@ -46,24 +46,24 @@ public class TweetController : ControllerBase
     /// <param name="id">Tweet identifier.</param>
     /// <returns>A tweet.</returns>
     [HttpGet("{id}")]
-    public ActionResult<Tweet> GetTweetById(string id)
+    public ActionResult<Tweet> GetTweet(string id)
     {
-        this.logger.LogInformation(message: "{Action} request received. Tweet ID={Id}", nameof(this.GetTweetById), id);
+        this.logger.LogInformation(message: "{Action} request received. Tweet ID={Id}", nameof(this.GetTweet), id);
 
         if (string.IsNullOrWhiteSpace(id))
         {
-            this.logger.LogWarning(message: "{Action} request completed. Request is invalid: 'id' is null or whitespace.", nameof(this.GetTweetById));
+            this.logger.LogWarning(message: "{Action} request completed. Request is invalid: 'id' is null or whitespace.", nameof(this.GetTweet));
             return this.BadRequest(new UnsuccessResonse("'id' is required."));
         }
 
         var result = this.tweetsRepository.GetFirstOrDefault(tweet => tweet.Id == id.ToLowerInvariant());
         if (result == null)
         {
-            this.logger.LogWarning(message: "{Action} request completed. Tweet ID={Id} is not found in the storage.", nameof(this.GetTweetById), id);
+            this.logger.LogWarning(message: "{Action} request completed. Tweet ID={Id} is not found in the storage.", nameof(this.GetTweet), id);
             return this.NotFound(new UnsuccessResonse($"Tweet with ID={id} is not found."));
         }
 
-        this.logger.LogInformation(message: "{Action} request completed. Tweet found: {Tweet}", nameof(this.GetTweetById), result.ToString());
+        this.logger.LogInformation(message: "{Action} request completed. Tweet found: {Tweet}", nameof(this.GetTweet), result.ToString());
         return this.Ok(result);
     }
 
