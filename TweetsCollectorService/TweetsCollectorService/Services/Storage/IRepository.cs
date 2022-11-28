@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 /// The storage interface.
 /// </summary>
 /// <typeparam name="T">A storage model class.</typeparam>
-public interface IStorage<T>
+public interface IRepository<T> : IEnumerable<T> where T : class
 {
     /// <summary>
     /// Adds a new entity to the storage.

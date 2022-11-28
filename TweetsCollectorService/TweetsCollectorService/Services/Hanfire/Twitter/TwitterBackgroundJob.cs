@@ -15,7 +15,7 @@ public class TwitterBackgroundJob : ITwitterBackgroundJob
     #region Private members
 
     private readonly ITwitterService twitter;
-    private readonly IStorage<Tweet> storage;
+    private readonly IRepository<Tweet> tweetsRepository;
     private readonly ILogger<TwitterBackgroundJob> logger;
 
     #endregion
@@ -26,13 +26,13 @@ public class TwitterBackgroundJob : ITwitterBackgroundJob
     /// Initializes a new instance of the <see cref="TwitterBackgroundJob"/> class.
     /// </summary>
     /// <param name="twitter">The injected Twitter service.</param>
-    /// <param name="storage">The injected storage.</param>
+    /// <param name="tweetsRepository">The injected tweets repository.</param>
     /// <param name="logger">The injected logger.</param>
     /// <exception cref="ArgumentNullException"></exception>
-    public TwitterBackgroundJob(ITwitterService twitter, IStorage<Tweet> storage, ILogger<TwitterBackgroundJob> logger)
+    public TwitterBackgroundJob(ITwitterService twitter, IRepository<Tweet> tweetsRepository, ILogger<TwitterBackgroundJob> logger)
     {
         this.twitter = twitter ?? throw new ArgumentNullException(nameof(twitter));
-        this.storage = storage ?? throw new ArgumentNullException(nameof(storage));
+        this.tweetsRepository = tweetsRepository ?? throw new ArgumentNullException(nameof(tweetsRepository));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -52,41 +52,44 @@ public class TwitterBackgroundJob : ITwitterBackgroundJob
 
         try
         {
-            this.logger.LogInformation("Background job '{Job}' started.", jobName);
+
+            this.logger.LogInformation(message: "Background job '{JobName}' started.", jobName);
             context.LogInformation($"Background job '{jobName}' started.");
 
             int pulledTweetsCount = 0;
-            await foreach (var tweet in this.twitter.GetTweetsStream(context.CancellationToken.ShutdownToken))
+            await foreach (var tweetResponse in this.twitter.GetTweetsStream(context.CancellationToken.ShutdownToken))
             {
-                if (tweet?.Data != null)
+                if (tweetResponse?.Data != null)
                 {
-                    this.storage.Add(new Tweet(tweet.Data));
+                    var tweet = new Tweet(tweetResponse.Data);
+                    tweet.Meta.TransactionId = context.BackgroundJob.Id;
+                    this.tweetsRepository.Add(tweet);
 
                     pulledTweetsCount++;
-                    if (pulledTweetsCount % 100 == 0)
+                    if (pulledTweetsCount % 100 == 0) // Log each 100 tweets count
                     {
-                        this.logger.LogDebug("{Job} in progress... Pulled {N} tweets.", pulledTweetsCount);
+                        this.logger.LogDebug(message: "{Job} in progress... Pulled {N} tweets.", jobName, pulledTweetsCount);
                         context.LogDebug($"{jobName} in progress... Pulled {pulledTweetsCount} tweets.");
                     }
                 }
                 else
                 {
-                    this.logger.LogWarning("Pulled tweet data is invadid.");
+                    this.logger.LogWarning(message: "Pulled tweet data is invadid.");
                     context.LogWarning("Pulled tweet data is invadid.");
                 }
             }
 
-            this.logger.LogInformation("Background job '{Job}' completed. Pulled {N} tweets.", jobName, pulledTweetsCount);
-            context.LogInformation($"Background job '{jobName}' started. Pulled {pulledTweetsCount} tweets.");
+            this.logger.LogInformation(message: "Background job '{JobName}' completed. Pulled {PulledTweetsCount} tweets.", jobName, pulledTweetsCount);
+            context.LogInformation($"Background job '{jobName}' completed. Pulled {pulledTweetsCount} tweets.");
         }
         catch (TaskCanceledException)
         {
-            this.logger.LogWarning("Background job '{Job}' canceled.", jobName);
+            this.logger.LogWarning(message: "Background job '{JobName}' canceled.", jobName);
             context.LogWarning($"Background job '{jobName}' canceled.");
         }
         catch (Exception ex)
         {
-            this.logger.LogError(ex, "Background job '{Job}' failed.", jobName);
+            this.logger.LogError(ex, message: "Background job '{JobName}' failed.", jobName);
             context.LogError($"Background job '{jobName}' failed: {ex.Message}.");
         }
     }

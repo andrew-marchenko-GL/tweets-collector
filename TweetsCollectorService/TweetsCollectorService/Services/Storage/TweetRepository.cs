@@ -1,6 +1,7 @@
 ﻿namespace Jha.Services.TweetsCollectorService.Services.Storage;
 
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Globalization;
 using Jha.Services.TweetsCollectorService.Models.Twitter;
@@ -8,23 +9,23 @@ using Jha.Services.TweetsCollectorService.Models.Twitter;
 /// <summary>
 /// The Twitter tweets in memory storage.
 /// </summary>
-public class TwitterStorage : IStorage<Tweet>
+public class TweetRepository : IRepository<Tweet>
 {
     #region Private members
 
     private readonly ConcurrentDictionary<string, Tweet> storage;
-    private readonly ILogger<TwitterStorage> logger;
+    private readonly ILogger<TweetRepository> logger;
 
     #endregion
 
     #region Constructor
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TwitterStorage"/> class.
+    /// Initializes a new instance of the <see cref="TweetRepository"/> class.
     /// </summary>
     /// <param name="logger">The injected logger.</param>
     /// <exception cref="ArgumentNullException"></exception>
-    public TwitterStorage(ILogger<TwitterStorage> logger)
+    public TweetRepository(ILogger<TweetRepository> logger)
     {
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         this.storage = new ConcurrentDictionary<string, Tweet>();
@@ -33,6 +34,18 @@ public class TwitterStorage : IStorage<Tweet>
     #endregion
 
     #region IStorage
+
+    /// <inheritdoc/>
+    public IEnumerator<Tweet> GetEnumerator()
+    {
+        return this.storage.Values.GetEnumerator();
+    }
+
+    /// <inheritdoc/>
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return this.storage.Values.GetEnumerator();
+    }
 
     /// <inheritdoc/>
     public Tweet Add(Tweet entity)
@@ -52,7 +65,7 @@ public class TwitterStorage : IStorage<Tweet>
             throw new ArgumentException($"The tweet with ID={entity.Id} already exists.");
         }
 
-        this.logger.LogInformation("Tweet added to the storage. Tweet ID={Id}", entity.Id);
+        this.logger.LogInformation(message: "Tweet added to the storage. Tweet ID={Id}", entity.Id);
 
         return entity;
     }
@@ -61,7 +74,7 @@ public class TwitterStorage : IStorage<Tweet>
     public void Clear()
     {
         this.storage.Clear();
-        this.logger.LogInformation("Tweet storage cleared.");
+        this.logger.LogInformation(message: "Tweets storage cleared.");
     }
 
     /// <inheritdoc/>
@@ -90,7 +103,7 @@ public class TwitterStorage : IStorage<Tweet>
         {
             if (!this.storage.Remove(tweet.Id, out _))
             {
-                this.logger.LogWarning("Unable to remove tweet {Tweet}.", tweet);
+                this.logger.LogWarning(message: "Unable to remove tweet {Tweet}.", tweet);
             }
 
             return tweet;

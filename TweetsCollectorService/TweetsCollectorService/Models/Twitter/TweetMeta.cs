@@ -51,5 +51,10 @@ public class TweetMeta
     /// Gets the tweet length
     /// </summary>
     public int TweetLength { get; }
+
+    /// <summary>
+    /// Gets or sets the transaction identifier.
+    /// </summary>
+    public string? TransactionId { get; set; }
 }
 

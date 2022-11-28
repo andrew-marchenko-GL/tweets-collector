@@ -21,7 +21,8 @@ public static class TwitterServices
     {
         services.AddHttpClient<ITwitterService, TwitterService>();
         services.Configure<TwitterConfiguration>(options => configuration.GetSection(TwitterConfiguration.SectionPath).Bind(options));
-        services.AddSingleton<IStorage<Tweet>, TwitterStorage>();
+        services.AddSingleton<IRepository<Tweet>, TweetRepository>();
+        services.AddTransient<ITwitterStatisticService, TwitterStatisticService>();
 
         return services;
     }

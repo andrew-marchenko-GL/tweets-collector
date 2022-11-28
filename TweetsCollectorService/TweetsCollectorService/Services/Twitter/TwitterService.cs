@@ -59,7 +59,6 @@ public class TwitterService : ITwitterService
         do
         {
             lineResponse = await streamReader.ReadLineAsync();
-            Console.WriteLine($"Line Response: {lineResponse}");
             if (!string.IsNullOrWhiteSpace(lineResponse))
             {
                 var tweet = JsonSerializer.Deserialize<TweetResponse<TweetBase>>(lineResponse, this.serializerOptions);
