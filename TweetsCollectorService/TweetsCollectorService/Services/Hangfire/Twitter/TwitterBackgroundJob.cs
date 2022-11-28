@@ -52,31 +52,36 @@ public class TwitterBackgroundJob : ITwitterBackgroundJob
 
         try
         {
-
             this.logger.LogInformation(message: "Background job '{JobName}' started.", jobName);
             context.LogInformation($"Background job '{jobName}' started.");
 
             int pulledTweetsCount = 0;
-            await foreach (var tweetResponse in this.twitter.GetTweetsStream(context.CancellationToken.ShutdownToken))
+            while (!context.CancellationToken.ShutdownToken.IsCancellationRequested)
             {
-                if (tweetResponse.Data != null)
+                await foreach (var tweetResponse in this.twitter.GetTweetsStream(context.CancellationToken.ShutdownToken))
                 {
-                    var tweet = new Tweet(tweetResponse.Data);
-                    tweet.Meta.TransactionId = context.BackgroundJob.Id;
-                    this.tweetsRepository.Add(tweet);
-
-                    pulledTweetsCount++;
-                    if (pulledTweetsCount % 100 == 0) // Log each 100 tweets count
+                    if (tweetResponse.Data != null)
                     {
-                        this.logger.LogDebug(message: "{Job} in progress... Pulled {N} tweets.", jobName, pulledTweetsCount);
-                        context.LogDebug($"{jobName} in progress... Pulled {pulledTweetsCount} tweets.");
+                        var tweet = new Tweet(tweetResponse.Data);
+                        tweet.Meta.TransactionId = context.BackgroundJob.Id;
+                        this.tweetsRepository.Add(tweet);
+
+                        pulledTweetsCount++;
+                        if (pulledTweetsCount % 100 == 0) // Log each 100 tweets count
+                        {
+                            this.logger.LogDebug(message: "{Job} in progress... Pulled {N} tweets.", jobName, pulledTweetsCount);
+                            context.LogDebug($"{jobName} in progress... Pulled {pulledTweetsCount} tweets.");
+                        }
+                    }
+                    else
+                    {
+                        this.logger.LogWarning(message: "Pulled tweet data is invadid.");
+                        context.LogWarning("Pulled tweet data is invadid.");
                     }
                 }
-                else
-                {
-                    this.logger.LogWarning(message: "Pulled tweet data is invadid.");
-                    context.LogWarning("Pulled tweet data is invadid.");
-                }
+
+                // This delay is needed to cover Twitter API dev single connection limitation.
+                await Task.Delay(TimeSpan.FromSeconds(5), context.CancellationToken.ShutdownToken);
             }
 
             this.logger.LogInformation(message: "Background job '{JobName}' completed. Pulled {PulledTweetsCount} tweets.", jobName, pulledTweetsCount);
@@ -91,6 +96,7 @@ public class TwitterBackgroundJob : ITwitterBackgroundJob
         {
             this.logger.LogError(ex, message: "Background job '{JobName}' failed.", jobName);
             context.LogError($"Background job '{jobName}' failed: {ex.Message}.");
+            throw;
         }
     }
 

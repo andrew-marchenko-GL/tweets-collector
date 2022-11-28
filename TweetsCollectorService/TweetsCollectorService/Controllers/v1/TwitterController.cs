@@ -89,30 +89,38 @@ public class TwitterController : ControllerBase
     }
 
     /// <summary>
-    /// PullTweets
+    /// StartPolling
     /// </summary>
     /// <remarks>
     /// Starts a background job that pulls tweets from Twitter basic stream API.
     /// </remarks>
     /// <returns>The response with information about background job.</returns>
     [HttpPost("[action]")]
-    public ActionResult<PullTweetsResponse> PullTweets()
+    public ActionResult<PullTweetsResponse> StartPolling()
     {
-        this.logger.LogInformation(message: "{Action} request received.", nameof(this.PullTweets));
+        this.logger.LogInformation(message: "{Action} request received.", nameof(this.StartPolling));
 
         string jobId = this.backgroundJobClient.Enqueue(() => this.twitterBackgroundJob.PullTweetsIntoStorage(null));
         var jobUri = new Uri($"{this.Request.Scheme}://{this.Request.Host.Value}/hangfire/jobs/details/{jobId}");
         var result = new PullTweetsResponse { IsSuccess = true, JobId = jobId, JobUri = jobUri };
 
-        this.logger.LogInformation(message: "{Action} request completed. Enqueued job '{JobId}'.", nameof(this.PullTweets), jobId);
-
+        this.logger.LogInformation(message: "{Action} request completed. Enqueued job '{JobId}'.", nameof(this.StartPolling), jobId);
         return this.Created(jobUri, result);
     }
     
+    /// <summary>
+    /// StopPolling
+    /// </summary>
+    /// <param name="jobId">The job identifier.</param>
+    /// <returns></returns>
     [HttpPost("[action]/{jobId}")]
-    public static ActionResult<PullTweetsResponse> StopPolling(string jobId)
+    public ActionResult<PullTweetsResponse> StopPolling(string jobId)
     {
-        throw new NotImplementedException();
+        bool isSuccess = this.backgroundJobClient.Delete(jobId);
+        var jobUri = new Uri($"{this.Request.Scheme}://{this.Request.Host.Value}/hangfire/jobs/details/{jobId}");
+        var result = new PullTweetsResponse { IsSuccess = isSuccess, JobId = jobId, JobUri = jobUri };
+
+        return isSuccess ? this.Ok(result) : this.BadRequest(result);
     }
 
     /// <summary>
