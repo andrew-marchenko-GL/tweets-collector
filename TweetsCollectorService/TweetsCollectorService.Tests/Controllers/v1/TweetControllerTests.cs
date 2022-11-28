@@ -1,4 +1,4 @@
-﻿namespace TweetsCollectorService.Tests.Controllers.v1;
+﻿namespace Jha.Services.TweetsCollectorService.Tests.Controllers.v1;
 
 using System;
 using System.Linq.Expressions;
