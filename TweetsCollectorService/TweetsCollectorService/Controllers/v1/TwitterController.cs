@@ -1,11 +1,10 @@
 ﻿namespace Jha.Services.TweetsCollectorService.Controllers.v1;
 
 using System;
-using System.Linq;
 using Hangfire;
 using Jha.Services.TweetsCollectorService.Models.Responses;
 using Jha.Services.TweetsCollectorService.Models.Twitter;
-using Jha.Services.TweetsCollectorService.Services.Hanfire.Twitter;
+using Jha.Services.TweetsCollectorService.Services.Hangfire.Twitter;
 using Jha.Services.TweetsCollectorService.Services.Storage;
 using Jha.Services.TweetsCollectorService.Services.Twitter;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +33,7 @@ public class TwitterController : ControllerBase
     /// Initializes a new instance of the <see cref="TwitterController"/> class.
     /// </summary>
     /// <param name="tweetsRepository">The injected tweets repository.</param>
-    /// <param name="backgroundJobClient">The injected Hangfier background job client.</param>
+    /// <param name="backgroundJobClient">The injected Hangfire background job client.</param>
     /// <param name="twitterBackgroundJob">The injected Twitter background job.</param>
     /// <param name="twitterStatisticService">The injected Twitter statistic service.</param>
     /// <param name="logger">The injected logger.</param>
@@ -105,9 +104,15 @@ public class TwitterController : ControllerBase
         var jobUri = new Uri($"{this.Request.Scheme}://{this.Request.Host.Value}/hangfire/jobs/details/{jobId}");
         var result = new PullTweetsResponse { IsSuccess = true, JobId = jobId, JobUri = jobUri };
 
-        this.logger.LogInformation(message: "{Action} request completed. Enqued job '{JobId}'.", nameof(this.PullTweets), jobId);
+        this.logger.LogInformation(message: "{Action} request completed. Enqueued job '{JobId}'.", nameof(this.PullTweets), jobId);
 
         return this.Created(jobUri, result);
+    }
+    
+    [HttpPost("[action]/{jobId}")]
+    public static ActionResult<PullTweetsResponse> StopPolling(string jobId)
+    {
+        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -123,4 +128,3 @@ public class TwitterController : ControllerBase
         return this.twitterStatisticService.GenerateReport();
     }
 }
-

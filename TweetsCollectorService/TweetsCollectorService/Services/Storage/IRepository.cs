@@ -1,7 +1,6 @@
 ﻿namespace Jha.Services.TweetsCollectorService.Services.Storage;
 
 using System;
-using System.Linq.Expressions;
 
 /// <summary>
 /// The storage interface.

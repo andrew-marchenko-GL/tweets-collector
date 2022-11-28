@@ -76,7 +76,7 @@ public class TweetController : ControllerBase
     /// <param name="tweet">Tweet text model.</param>
     /// <returns>A created tweet.</returns>
     [HttpPost]
-    public ActionResult<Tweet> CreateTweet(TweetText tweet)
+    public ActionResult<Tweet> CreateTweet(TweetText? tweet)
     {
         this.logger.LogInformation(message: "{Action} request received. Tweet: {Tweet}", nameof(this.CreateTweet), tweet);
 
@@ -122,4 +122,3 @@ public class TweetController : ControllerBase
         return this.Ok(result);
     }
 }
-

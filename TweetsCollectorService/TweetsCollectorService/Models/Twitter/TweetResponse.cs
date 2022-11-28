@@ -1,7 +1,5 @@
 ﻿namespace Jha.Services.TweetsCollectorService.Models.Twitter;
 
-using System;
-
 /// <summary>
 /// The tweet response model.
 /// </summary>

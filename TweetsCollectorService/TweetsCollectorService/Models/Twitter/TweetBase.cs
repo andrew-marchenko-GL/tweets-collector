@@ -1,7 +1,5 @@
 ﻿namespace Jha.Services.TweetsCollectorService.Models.Twitter;
 
-using System;
-
 /// <summary>
 /// Represends the tweet basic entity.
 /// </summary>

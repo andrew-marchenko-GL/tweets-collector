@@ -36,7 +36,7 @@ public class TwitterStatisticService : ITwitterStatisticService
 
         var maxTime = this.tweetsRepository.Max(tweet => tweet.Meta.CreatedAtUtc);
         var minTime = this.tweetsRepository.Min(tweet => tweet.Meta.CreatedAtUtc);
-        double throughput = (double)count / (maxTime - minTime).TotalMinutes;
+        double throughput = count / (maxTime - minTime).TotalMinutes;
         int minTweetLength = this.tweetsRepository.Where(tweet => tweet.Meta.CreatedAtUtc <= maxTime).Min(tweet => tweet.Meta.TweetLength);
         int maxTweetLength = this.tweetsRepository.Where(tweet => tweet.Meta.CreatedAtUtc <= maxTime).Max(tweet => tweet.Meta.TweetLength);
         int avgTweetLength = (int)this.tweetsRepository.Where(tweet => tweet.Meta.CreatedAtUtc <= maxTime).Average(tweet => tweet.Meta.TweetLength);
@@ -53,4 +53,3 @@ public class TwitterStatisticService : ITwitterStatisticService
         };
     }
 }
-

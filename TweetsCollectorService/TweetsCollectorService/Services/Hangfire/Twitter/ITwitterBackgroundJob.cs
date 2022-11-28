@@ -1,6 +1,6 @@
-﻿namespace Jha.Services.TweetsCollectorService.Services.Hanfire.Twitter;
+﻿namespace Jha.Services.TweetsCollectorService.Services.Hangfire.Twitter;
 
-using Hangfire.Server;
+using global::Hangfire.Server;
 
 /// <summary>
 /// The Twitter background job interface
@@ -12,6 +12,6 @@ public interface ITwitterBackgroundJob
     /// and adds them to the storage.
     /// </summary>
     /// <param name="context">The background job perform context.</param>
-    /// <returns>A task that represents asynchronious operation.</returns>
+    /// <returns>A task that represents asynchronous operation.</returns>
     Task PullTweetsIntoStorage(PerformContext? context);
 }

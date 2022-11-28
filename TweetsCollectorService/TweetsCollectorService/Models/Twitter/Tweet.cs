@@ -48,11 +48,4 @@ public class Tweet : TweetBase
     /// Gets the tweet metadata.
     /// </summary>
     public TweetMeta Meta { get; }
-
-    /// <inheritdoc/>
-    public override string ToString()
-    {
-        return base.ToString();
-    }
 }
-

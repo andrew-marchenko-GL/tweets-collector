@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.sln.DotSettings
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -351,3 +352,6 @@ MigrationBackup/
 
 # MacOS system folders
 .DS_Store
+
+# Rider
+.idea/

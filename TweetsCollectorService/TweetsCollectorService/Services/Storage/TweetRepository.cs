@@ -86,7 +86,7 @@ public class TweetRepository : IRepository<Tweet>
     /// <inheritdoc/>
     public IEnumerable<Tweet> GetAllWhere(Func<Tweet, bool>? predicate = null)
     {
-        return predicate == null ? this.storage.Values : this.storage.Values.Where(predicate) ?? new List<Tweet>();
+        return predicate == null ? this.storage.Values : this.storage.Values.Where(predicate);
     }
 
     /// <inheritdoc/>
@@ -114,4 +114,3 @@ public class TweetRepository : IRepository<Tweet>
 
     #endregion
 }
-

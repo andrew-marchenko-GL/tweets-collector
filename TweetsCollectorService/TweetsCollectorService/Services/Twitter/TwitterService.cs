@@ -28,7 +28,7 @@ public class TwitterService : ITwitterService
     /// <param name="client">The injected HTTP client.</param>
     /// <param name="configuration">The injected </param>
     /// <exception cref="ArgumentNullException">Argument is not injected.</exception>
-    public TwitterService(HttpClient client, IOptions<TwitterConfiguration> configuration)
+    public TwitterService(HttpClient client, IOptions<TwitterConfiguration>? configuration)
     {
         this.client = client ?? throw new ArgumentNullException(nameof(client));
 
@@ -72,4 +72,3 @@ public class TwitterService : ITwitterService
 
     #endregion
 }
-

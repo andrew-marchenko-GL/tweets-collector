@@ -1,8 +1,8 @@
-﻿namespace Jha.Services.TweetsCollectorService.Services.Hanfire.Twitter;
+﻿namespace Jha.Services.TweetsCollectorService.Services.Hangfire.Twitter;
 
 using System;
-using Hangfire.JobsLogger;
-using Hangfire.Server;
+using global::Hangfire.JobsLogger;
+using global::Hangfire.Server;
 using Jha.Services.TweetsCollectorService.Models.Twitter;
 using Jha.Services.TweetsCollectorService.Services.Storage;
 using Jha.Services.TweetsCollectorService.Services.Twitter;
@@ -59,7 +59,7 @@ public class TwitterBackgroundJob : ITwitterBackgroundJob
             int pulledTweetsCount = 0;
             await foreach (var tweetResponse in this.twitter.GetTweetsStream(context.CancellationToken.ShutdownToken))
             {
-                if (tweetResponse?.Data != null)
+                if (tweetResponse.Data != null)
                 {
                     var tweet = new Tweet(tweetResponse.Data);
                     tweet.Meta.TransactionId = context.BackgroundJob.Id;
@@ -96,4 +96,3 @@ public class TwitterBackgroundJob : ITwitterBackgroundJob
 
     #endregion
 }
-

@@ -3,7 +3,7 @@
 using Hangfire;
 using Hangfire.JobsLogger;
 using Hangfire.MemoryStorage;
-using Jha.Services.TweetsCollectorService.Services.Hanfire.Twitter;
+using Jha.Services.TweetsCollectorService.Services.Hangfire.Twitter;
 
 /// <summary>
 /// The Hangfire services extensions.

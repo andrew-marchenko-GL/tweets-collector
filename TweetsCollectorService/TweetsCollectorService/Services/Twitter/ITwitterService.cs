@@ -1,6 +1,5 @@
 ﻿namespace Jha.Services.TweetsCollectorService.Services.Twitter;
 
-using System.Runtime.CompilerServices;
 using Jha.Services.TweetsCollectorService.Models.Twitter;
 
 /// <summary>

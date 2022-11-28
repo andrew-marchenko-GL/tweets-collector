@@ -1,7 +1,8 @@
-﻿namespace Jha.Services.TweetsCollectorService.Tests.Controllers.v1;
+﻿// ReSharper disable ObjectCreationAsStatement
+namespace Jha.Services.TweetsCollectorService.Tests.Controllers.v1;
 
 using System;
-using System.Linq.Expressions;
+using System.Diagnostics.CodeAnalysis;
 using Jha.Services.TweetsCollectorService.Controllers.v1;
 using Jha.Services.TweetsCollectorService.Models.Twitter;
 using Jha.Services.TweetsCollectorService.Services.Storage;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 
+[SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
 public class TweetControllerTests
 {
     #region Mocks
@@ -165,7 +167,7 @@ public class TweetControllerTests
         this.tweetsRepositoryMock.Setup(m => m.RemoveFirstOrDefault(It.IsAny<Func<Tweet, bool>>())).Returns(tweet);
 
         var response = this.controller.DeleteTweet("123");
-        var result = (OkObjectResult)response?.Result;
+        var result = (OkObjectResult)response.Result;
         var resultTweet = (Tweet)result?.Value;
 
         Assert.That(response, Is.Not.Null);
@@ -180,4 +182,3 @@ public class TweetControllerTests
 
     #endregion
 }
-
