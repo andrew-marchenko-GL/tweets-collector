@@ -46,7 +46,8 @@ The `Twitter` controller allows to control the service itself:
 
 - `Count` returns total tweets in the storage.
 - `Clear` removes all tweets from the storage.
-- `PullTweets` starts the background process that pulls tweets using the Twitter API sample stream endpoint into the in-memory storage.
+- `StartPolling` starts the background process that pulls tweets using the Twitter API sample stream endpoint into the in-memory storage.
+- `StopPolling` stops the background process.
 - `Statistic` provides with the statistic data at the moment of the call.
 
 > If you use a free Twitter Dev license, you will be prohibited from running multiple background jobs at the same time and will see that the background job may fail due to the `Too many requests` error. It's not limited to a single instance at this moment to have the freedom of choice.
