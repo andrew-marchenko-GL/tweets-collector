@@ -52,8 +52,6 @@ The `Twitter` controller allows to control the service itself:
 
 > If you use a free Twitter Dev license, you will be prohibited from running multiple background jobs at the same time and will see that the background job may fail due to the `Too many requests` error. It's not limited to a single instance at this moment to have the freedom of choice.
 
-> One call of the `PullTweets` action will add one batch of tweets.
-
 You can track the progress of the service either see the application output logs or using the Hangfire Dashboard (you will get the link to the job in the response): https://localhost:7055/hangfire.
 
 ## Unit tests
