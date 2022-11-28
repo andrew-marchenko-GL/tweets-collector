@@ -7,6 +7,7 @@ using Jha.Services.TweetsCollectorService.Models.Responses;
 using Jha.Services.TweetsCollectorService.Models.Twitter;
 using Jha.Services.TweetsCollectorService.Services.Hanfire.Twitter;
 using Jha.Services.TweetsCollectorService.Services.Storage;
+using Jha.Services.TweetsCollectorService.Services.Twitter;
 using Microsoft.AspNetCore.Mvc;
 
 /// <summary>
@@ -19,9 +20,10 @@ public class TwitterController : ControllerBase
 {
     #region Private members
 
-    private readonly IStorage<Tweet> storage;
+    private readonly IRepository<Tweet> tweetsRepository;
     private readonly IBackgroundJobClient backgroundJobClient;
     private readonly ITwitterBackgroundJob twitterBackgroundJob;
+    private readonly ITwitterStatisticService twitterStatisticService;
     private readonly ILogger<TwitterController> logger;
 
     #endregion
@@ -31,19 +33,22 @@ public class TwitterController : ControllerBase
     /// <summary>
     /// Initializes a new instance of the <see cref="TwitterController"/> class.
     /// </summary>
-    /// <param name="storage">The injected tweets storage.</param>
+    /// <param name="tweetsRepository">The injected tweets repository.</param>
     /// <param name="backgroundJobClient">The injected Hangfier background job client.</param>
     /// <param name="twitterBackgroundJob">The injected Twitter background job.</param>
+    /// <param name="twitterStatisticService">The injected Twitter statistic service.</param>
     /// <param name="logger">The injected logger.</param>
     public TwitterController(
-        IStorage<Tweet> storage,
+        IRepository<Tweet> tweetsRepository,
         IBackgroundJobClient backgroundJobClient,
         ITwitterBackgroundJob twitterBackgroundJob,
+        ITwitterStatisticService twitterStatisticService,
         ILogger<TwitterController> logger)
     {
-        this.storage = storage ?? throw new ArgumentNullException(nameof(storage));
+        this.tweetsRepository = tweetsRepository ?? throw new ArgumentNullException(nameof(tweetsRepository));
         this.backgroundJobClient = backgroundJobClient ?? throw new ArgumentNullException(nameof(backgroundJobClient));
         this.twitterBackgroundJob = twitterBackgroundJob ?? throw new ArgumentNullException(nameof(twitterBackgroundJob));
+        this.twitterStatisticService = twitterStatisticService ?? throw new ArgumentNullException(nameof(twitterStatisticService));
         this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -59,11 +64,11 @@ public class TwitterController : ControllerBase
     [HttpGet("[action]")]
     public ActionResult<int> Count()
     {
-        this.logger.LogInformation("{Action} request received.", nameof(this.Count));
+        this.logger.LogInformation(message: "{Action} request received.", nameof(this.Count));
 
-        int result = this.storage.Count();
+        int result = this.tweetsRepository.Count();
 
-        this.logger.LogInformation("{Action} request completed. Fount {Count} tweets in the storage.", nameof(this.Count), result);
+        this.logger.LogInformation(message: "{Action} request completed. Found {Count} tweets in the storage.", nameof(this.Count), result);
         return this.Ok(result);
     }
 
@@ -73,15 +78,14 @@ public class TwitterController : ControllerBase
     /// <remarks>
     /// Erases the Twitter storage.
     /// </remarks>
-    /// <returns>Tweets count.</returns>
     [HttpDelete("[action]")]
     public IActionResult Clear()
     {
-        this.logger.LogInformation("{Action} request received.", nameof(this.Clear));
+        this.logger.LogInformation(message: "{Action} request received.", nameof(this.Clear));
 
-        this.storage.Clear();
+        this.tweetsRepository.Clear();
 
-        this.logger.LogInformation("{Action} request completed.", nameof(this.Clear));
+        this.logger.LogInformation(message: "{Action} request completed.", nameof(this.Clear));
         return this.Ok();
     }
 
@@ -91,19 +95,32 @@ public class TwitterController : ControllerBase
     /// <remarks>
     /// Starts a background job that pulls tweets from Twitter basic stream API.
     /// </remarks>
-    /// <returns>Test</returns>
+    /// <returns>The response with information about background job.</returns>
     [HttpPost("[action]")]
     public ActionResult<PullTweetsResponse> PullTweets()
     {
-        this.logger.LogInformation("{Action} request received.", nameof(this.PullTweets));
+        this.logger.LogInformation(message: "{Action} request received.", nameof(this.PullTweets));
 
         string jobId = this.backgroundJobClient.Enqueue(() => this.twitterBackgroundJob.PullTweetsIntoStorage(null));
         var jobUri = new Uri($"{this.Request.Scheme}://{this.Request.Host.Value}/hangfire/jobs/details/{jobId}");
         var result = new PullTweetsResponse { IsSuccess = true, JobId = jobId, JobUri = jobUri };
 
-        this.logger.LogInformation("{Action} request completed. Enqued job '{JobId}'.", nameof(this.PullTweets), jobId);
+        this.logger.LogInformation(message: "{Action} request completed. Enqued job '{JobId}'.", nameof(this.PullTweets), jobId);
 
         return this.Created(jobUri, result);
+    }
+
+    /// <summary>
+    /// Statistic
+    /// </summary>
+    /// <remarks>
+    /// Generates a statistics report of the Twitter storage.
+    /// </remarks>
+    /// <returns>The generated report.</returns>
+    [HttpGet("[action]")]
+    public ActionResult<TweetStatReport> Statistic()
+    {
+        return this.twitterStatisticService.GenerateReport();
     }
 }
 
