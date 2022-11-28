@@ -46,6 +46,10 @@ public class TweetController : ControllerBase
     /// <param name="id">Tweet identifier.</param>
     /// <returns>A tweet.</returns>
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UnsuccessResonse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(UnsuccessResonse))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<Tweet> GetTweet(string id)
     {
         this.logger.LogInformation(message: "{Action} request received. Tweet ID={Id}", nameof(this.GetTweet), id);
@@ -76,6 +80,9 @@ public class TweetController : ControllerBase
     /// <param name="tweet">Tweet text model.</param>
     /// <returns>A created tweet.</returns>
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UnsuccessResonse))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<Tweet> CreateTweet(TweetText? tweet)
     {
         this.logger.LogInformation(message: "{Action} request received. Tweet: {Tweet}", nameof(this.CreateTweet), tweet);
@@ -101,6 +108,10 @@ public class TweetController : ControllerBase
     /// <param name="id">Tweet identifier.</param>
     /// <returns>A deleted tweet.</returns>
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(UnsuccessResonse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(UnsuccessResonse))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<Tweet> DeleteTweet(string id)
     {
         this.logger.LogInformation(message: "{Action} request received. Tweet ID={ID}", nameof(this.DeleteTweet), id);

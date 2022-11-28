@@ -61,6 +61,8 @@ public class TwitterController : ControllerBase
     /// </remarks>
     /// <returns>Tweets count.</returns>
     [HttpGet("[action]")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<int> Count()
     {
         this.logger.LogInformation(message: "{Action} request received.", nameof(this.Count));
@@ -78,6 +80,8 @@ public class TwitterController : ControllerBase
     /// Erases the Twitter storage.
     /// </remarks>
     [HttpDelete("[action]")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public IActionResult Clear()
     {
         this.logger.LogInformation(message: "{Action} request received.", nameof(this.Clear));
@@ -96,6 +100,8 @@ public class TwitterController : ControllerBase
     /// </remarks>
     /// <returns>The response with information about background job.</returns>
     [HttpPost("[action]")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<PullTweetsResponse> StartPolling()
     {
         this.logger.LogInformation(message: "{Action} request received.", nameof(this.StartPolling));
@@ -111,9 +117,15 @@ public class TwitterController : ControllerBase
     /// <summary>
     /// StopPolling
     /// </summary>
+    /// <remarks>
+    /// Stops an existing polling background job.
+    /// </remarks>
     /// <param name="jobId">The job identifier.</param>
     /// <returns></returns>
     [HttpPost("[action]/{jobId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(PullTweetsResponse))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<PullTweetsResponse> StopPolling(string jobId)
     {
         bool isSuccess = this.backgroundJobClient.Delete(jobId);
@@ -131,6 +143,8 @@ public class TwitterController : ControllerBase
     /// </remarks>
     /// <returns>The generated report.</returns>
     [HttpGet("[action]")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<TweetStatReport> Statistic()
     {
         return this.twitterStatisticService.GenerateReport();
