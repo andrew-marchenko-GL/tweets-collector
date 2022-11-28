@@ -47,7 +47,7 @@ public class TwitterService : ITwitterService
     #region ITwitterService
 
     /// <inheritdoc/>
-    public async IAsyncEnumerable<TweetResponse<TweetBase>> GetTweetsStream([EnumeratorCancellation] CancellationToken cancellationToken)
+    public async IAsyncEnumerable<TweetResponse<TweetBase>> GetTweetsStream([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         using var response = await this.client.GetAsync("2/tweets/sample/stream", HttpCompletionOption.ResponseHeadersRead, cancellationToken);
 
@@ -59,7 +59,8 @@ public class TwitterService : ITwitterService
         do
         {
             lineResponse = await streamReader.ReadLineAsync();
-            if (lineResponse != null)
+            Console.WriteLine($"Line Response: {lineResponse}");
+            if (!string.IsNullOrWhiteSpace(lineResponse))
             {
                 var tweet = JsonSerializer.Deserialize<TweetResponse<TweetBase>>(lineResponse, this.serializerOptions);
                 if (tweet != null)
@@ -67,7 +68,7 @@ public class TwitterService : ITwitterService
                     yield return tweet;
                 }
             }
-        } while (lineResponse != null && !cancellationToken.IsCancellationRequested);
+        } while (!string.IsNullOrWhiteSpace(lineResponse) && !cancellationToken.IsCancellationRequested);
     }
 
     #endregion

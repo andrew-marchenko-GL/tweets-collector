@@ -13,5 +13,5 @@ public interface ITwitterService
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Streamed sample tweets.</returns>
-    IAsyncEnumerable<TweetResponse<TweetBase>> GetTweetsStream(CancellationToken cancellationToken);
+    IAsyncEnumerable<TweetResponse<TweetBase>> GetTweetsStream(CancellationToken cancellationToken = default);
 }

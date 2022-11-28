@@ -20,32 +20,11 @@
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.0.0" />
+		<PackageReference Include="Hangfire.AspNetCore" Version="1.7.32" />
+		<PackageReference Include="Hangfire.MemoryStorage" Version="1.7.0" />
+		<PackageReference Include="Hangfire.JobsLogger" Version="0.2.1" />
 	</ItemGroup>
 	<ItemGroup>
-	  <None Remove="Services\" />
-	  <None Remove="Services\Twitter\" />
-	  <None Remove="Models\" />
-	  <None Remove="Models\Configuration\" />
-	  <None Remove="Models\Twitter\" />
-	  <None Remove="Utils\" />
-	  <None Remove="Utils\Authentication\" />
-	  <None Remove="Utils\Authentication\OAuth\" />
-	  <None Remove="Utils\Authentication\OAuth\1.0\" />
-	  <None Remove="Services\Storage\" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Services\" />
-	  <Folder Include="Services\Twitter\" />
-	  <Folder Include="Models\" />
-	  <Folder Include="Models\Configuration\" />
-	  <Folder Include="Models\Twitter\" />
-	  <Folder Include="Utils\" />
-	  <Folder Include="Utils\Authentication\" />
-	  <Folder Include="Utils\Authentication\OAuth\" />
-	  <Folder Include="Utils\Authentication\OAuth\1.0\" />
-	  <Folder Include="Services\Storage\" />
-	</ItemGroup>
-	<ItemGroup>
-	  <None Include="..\.editorconfig" />
+		<None Include="..\.editorconfig" />
 	</ItemGroup>
 </Project>

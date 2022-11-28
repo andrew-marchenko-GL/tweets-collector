@@ -1,4 +1,4 @@
-﻿namespace Jha.Services.TweetsCollectorService.Models;
+﻿namespace Jha.Services.TweetsCollectorService.Models.Responses;
 
 using System;
 

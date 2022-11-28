@@ -18,16 +18,6 @@ public class TwitterConfiguration
     public Uri? BaseUri { get; set; }
 
     /// <summary>
-    /// Gets or set the Twitter API key.
-    /// </summary>
-    public string? ApiKey { get; set; }
-
-    /// <summary>
-    /// Gets or sets the Twitter API secret.
-    /// </summary>
-    public string? ApiSecret { get; set; }
-
-    /// <summary>
     /// Gets or sets the bearer auth token.
     /// </summary>
     public string? BearerToken { get; set; }
